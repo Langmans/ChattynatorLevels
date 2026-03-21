@@ -1,0 +1,10 @@
+enable-toc-creation: yes
+
+ignore:
+  - README.md
+
+required-dependencies:
+    - chattynator
+
+optional-dependencies:
+    - debuglog
