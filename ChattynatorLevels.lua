@@ -90,7 +90,7 @@ end
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_LOGIN", function()
     EventRegistry:RegisterFrameEventAndCallback("GUILD_ROSTER_UPDATE", function()
         local numGuildMembers = GetNumGuildMembers()
-        --Debug('Guild roster update, numGuildMembers: %d', numGuildMembers)
+        Debug('Guild roster update, numGuildMembers: %d', numGuildMembers)
         for i = 1, numGuildMembers do
             local name, _, _, level = GetGuildRosterInfo(i)
             if name and level then
@@ -98,7 +98,7 @@ EventRegistry:RegisterFrameEventAndCallback("PLAYER_LOGIN", function()
                 Debug('Guild member:%q %q', name, level)
             end
         end
-        --Debug('Guild roster updated')
+        Debug('Guild roster updated')
     end)
     EventRegistry:RegisterFrameEventAndCallback("GROUP_ROSTER_UPDATE", function()
         local groupType = IsInRaid() and "raid" or "party"
