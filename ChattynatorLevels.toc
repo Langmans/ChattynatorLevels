@@ -1,5 +1,6 @@
 ## Interface: 120000, 120001
 ## Title: Chattynator Levels
+## Category: Chat
 ## Version: @project-version@
 ## Notes: Adds levels to chat messages sent by players in Chattynator.
 ## RequiredDeps: Chattynator
