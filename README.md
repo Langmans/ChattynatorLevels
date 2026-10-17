@@ -1,6 +1,6 @@
 # ChattynatorLevels
 
-[![Release](https://img.shields.io/github/v/release/Langmans/ChattynatorLevels?include_prereleases&sort=semver)](https://github.com/Langmans/ChattynatorLevels/releases)
+[![Release](https://img.shields.io/github/v/release/Langmans/ChattynatorLevels?include_prereleases)](https://github.com/Langmans/ChattynatorLevels/releases)
 [![Game Version](https://img.shields.io/badge/WoW-12.0.0-blue.svg)](https://worldofwarcraft.com)
 
 **ChattynatorLevels** is a lightweight utility for the **Chattynator** addon designed to seamlessly integrate player levels into your World of Warcraft chat frames. It provides instant visual context to every conversation by injecting level information directly into player name links.
