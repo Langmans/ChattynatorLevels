@@ -30,6 +30,8 @@ The addon maintains a local database of player levels gathered from your social 
 
 *   **Chattynator** addon (Required)
 
+Not for WoW: Forever: Chattynator shows levels itself there (its "show level" option, on by default), for every player instead of only guild and group members.
+
 ***
 
 ### Technical Summary
