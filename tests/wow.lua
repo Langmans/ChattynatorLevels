@@ -24,6 +24,8 @@
 ---@field raid boolean? the group is a raid
 ---@field debugLog boolean? _DebugLog is loaded
 ---@field noGuildInfo boolean? the client has the old global GuildRoster, not C_GuildInfo's
+---@field guildRosterLib table<string, number>? LibGuildRoster is installed, with these
+---  "Name-Realm" -> level members (0 = a level it does not know yet)
 
 ---@param options TestClientOptions?
 function NewClient(options)
@@ -158,6 +160,28 @@ function NewClient(options)
                 return ("|cff%02d%02d%02x%s|r"):format(r, g, b, text)
             end,
         }
+    end
+
+    -- LibStub exists only when an addon brings it; here, the standalone LibGuildRoster.
+    _G.LibStub = nil
+    if options.guildRosterLib then
+        local members = options.guildRosterLib
+        local lib = { refreshHolders = {} }
+        client.guildRosterLib = lib
+        function lib:GetMember(name)
+            if not name:find("-", 1, true) then name = name .. "-ArgentDawn" end
+            return members[name] and { name = name, level = members[name] }
+        end
+        function lib:RequestLevelRefresh(owner)
+            self.refreshHolders[owner] = true
+            return true
+        end
+        _G.LibStub = setmetatable({}, {
+            __call = function(_, major, silent)
+                assert(major == "LibGuildRoster-1.0" and silent, "asked LibStub for " .. tostring(major))
+                return lib
+            end,
+        })
     end
 
     for _, file in ipairs(TOC_FILES) do

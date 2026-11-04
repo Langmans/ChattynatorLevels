@@ -29,6 +29,7 @@ The addon maintains a local database of player levels gathered from your social 
 ### Requirements
 
 *   **Chattynator** addon (Required)
+*   **[LibGuildRoster](https://www.curseforge.com/wow/addons/libguildroster)** (Optional): when installed, guild members' levels come from it. It keeps them current (at most one roster request a minute) and hears a guildmate's level-up at once from guildmates who run it too. Without it, the addon reads the guild roster itself.
 
 Not for WoW: Forever: Chattynator shows levels itself there (its "show level" option, on by default), for every player instead of only guild and group members.
 

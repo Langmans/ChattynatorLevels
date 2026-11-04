@@ -4,7 +4,7 @@
 ## Version: @project-version@
 ## Notes: Adds levels to chat messages sent by players in Chattynator.
 ## RequiredDeps: Chattynator
-## OptionalDeps: _DebugLog
+## OptionalDeps: _DebugLog, GuildRoster
 ## Author: Langmans
 
 ChattynatorLevels.lua

@@ -9,6 +9,9 @@ local wipe = table.wipe
 local DLAPI = DLAPI ---@type DLAPI?
 local Chattynator = Chattynator
 local canaccessvalue = canaccessvalue
+-- The standalone LibGuildRoster (OptionalDeps: GuildRoster), when installed. LibStub exists only
+-- when some addon brings it.
+local GuildRosterLib = (LibStub and LibStub("LibGuildRoster-1.0", true)) --[[@as LibGuildRoster?]]
 
 local CreateColor = CreateColor
 local EventRegistry = EventRegistry
@@ -55,6 +58,17 @@ end
 
 ---@type table<string, number> level per "Name-Realm"
 local playerLevels = {}
+
+---A player's level: read from a unit or the own guild roster, else LibGuildRoster's guild member.
+---@param name string "Name-Realm"
+---@return number?
+local function levelOf(name)
+    local level = playerLevels[name]
+    if level or not GuildRosterLib then return level end
+    local member = GuildRosterLib:GetMember(name)
+    -- 0 or nil: a member whose level the library does not know yet.
+    return member and member.level and member.level > 0 and member.level or nil
+end
 ---@type table<number, string> coloured level text, per level
 local coloredLevels = setmetatable({}, {
     ---@param tbl table<number, string>
@@ -102,8 +116,8 @@ local function onUnitEvent(owner, unit)
     ScanUnit(unit)
 end
 
----GUILD_ROSTER_UPDATE: true says the roster changed on the server and may be asked for again, as
----Blizzard's own UI does; the update that answers brings the new levels.
+---GUILD_ROSTER_UPDATE, without LibGuildRoster: on true the roster may be asked for again, which
+---Blizzard's own guild and calendar windows do; the update that answers brings the new levels.
 ---@param owner number EventRegistry's owner ID
 ---@param canRequestRosterUpdate boolean
 local function onGuildRoster(owner, canRequestRosterUpdate)
@@ -140,7 +154,13 @@ local function onLevelUp(owner, level)
 end
 
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_LOGIN", function()
-    EventRegistry:RegisterFrameEventAndCallback("GUILD_ROSTER_UPDATE", onGuildRoster)
+    -- LibGuildRoster asks for the roster at most once a minute while someone wants levels.
+    if GuildRosterLib then
+        GuildRosterLib:RequestLevelRefresh(addonName)
+    else
+        EventRegistry:RegisterFrameEventAndCallback("GUILD_ROSTER_UPDATE", onGuildRoster)
+        GuildRoster()
+    end
     EventRegistry:RegisterFrameEventAndCallback("GROUP_ROSTER_UPDATE", onGroupRoster)
     EventRegistry:RegisterFrameEventAndCallback("PLAYER_LEVEL_UP", onLevelUp)
     EventRegistry:RegisterFrameEventAndCallback("UNIT_LEVEL", onUnitEvent)
@@ -153,7 +173,6 @@ EventRegistry:RegisterFrameEventAndCallback("PLAYER_LOGIN", function()
     --EventRegistry:RegisterFrameEventAndCallback("UNIT_TARGET", onUnitEvent)
     --EventRegistry:RegisterFrameEventAndCallback("NAME_PLATE_UNIT_ADDED", onUnitEvent)
 
-    GuildRoster()
     thisRealm = GetNormalizedRealmName() or thisRealm
     Debug("logged in, realm=%q", thisRealm)
     ScanUnit("player")
@@ -186,14 +205,14 @@ local pattern = "|Hplayer:([^:]+):([^|]+)|h(.-)|h"
 ---@return string
 local replace = function(playerRealm, rest, displayText)
     --Debug('replace playerRealm=%q, rest=%q, displayText=%q', playerRealm, rest, displayText)
-    local level = playerLevels[fullName(playerRealm)]
+    local level = levelOf(fullName(playerRealm))
     if level then displayText = injectLevel(displayText, level) end
     return format("|Hplayer:%s:%s|h%s|h", playerRealm, rest, displayText)
 end
 ---@param data ChattynatorMessage
 local function addLevels(data)
     local name = data.typeInfo.player and data.typeInfo.player.name
-    if name and playerLevels[fullName(name)] then
+    if name and levelOf(fullName(name)) then
         --Debug(gsub(data.text, '|', '||'))
 
         data.text = gsub(data.text, pattern, replace)
