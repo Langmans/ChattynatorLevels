@@ -59,6 +59,4 @@ lua tests/check.lua format    formats all Lua with StyLua
 
 ***
 
-> **Note:** For the best experience, ensure your Chattynator is up to date to allow proper API access for the race data modifier.
-
-> **Note 2:** No AI was used while programming this addon. Just above description was generated.
+> **Note:** For the best experience, ensure your Chattynator is up to date to allow proper API access for the level modifier.
