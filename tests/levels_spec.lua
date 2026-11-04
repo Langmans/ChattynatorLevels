@@ -83,6 +83,15 @@ describe("levels are learned", function()
         assert.equal(guildLine("Ann-Other", "Ann|r:|cff6120ff61"), client:Chat("Ann-Other"))
     end)
 
+    it("from a group member's level-up, without a roster change", function()
+        local bob = { unit = "party1", name = "Bob", level = 12 }
+        local client = NewClient({ group = { bob } })
+        client:Fire("GROUP_ROSTER_UPDATE")
+        bob.level = 13
+        client:Fire("UNIT_LEVEL", "party1")
+        assert.equal(guildLine("Bob", "Bob|r:|cff1320ff13"), client:Chat("Bob"))
+    end)
+
     it("from raid members", function()
         local client = NewClient({ group = { { unit = "raid1", name = "Bob", level = 12 } }, raid = true })
         client:Fire("GROUP_ROSTER_UPDATE")

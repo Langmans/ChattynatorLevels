@@ -95,11 +95,12 @@ local ScanUnit = function(unit)
     Debug("Scanned %q: %q %q", unit, name, level)
 end
 
---[[
-local onUnitEvent = function(_, unit)
+---A unit's level changed (UNIT_LEVEL): rare, so reading the unit again costs nothing.
+---@param owner number EventRegistry's owner ID
+---@param unit string
+local function onUnitEvent(owner, unit)
     ScanUnit(unit)
 end
-]]
 
 local function onGuildRoster()
     local numGuildMembers = GetNumGuildMembers()
@@ -137,6 +138,7 @@ EventRegistry:RegisterFrameEventAndCallback("PLAYER_LOGIN", function()
     EventRegistry:RegisterFrameEventAndCallback("GUILD_ROSTER_UPDATE", onGuildRoster)
     EventRegistry:RegisterFrameEventAndCallback("GROUP_ROSTER_UPDATE", onGroupRoster)
     EventRegistry:RegisterFrameEventAndCallback("PLAYER_LEVEL_UP", onLevelUp)
+    EventRegistry:RegisterFrameEventAndCallback("UNIT_LEVEL", onUnitEvent)
     --EventRegistry:RegisterFrameEventAndCallback("UPDATE_MOUSEOVER_UNIT", function()
     --    ScanUnit('mouseover')
     --end)
@@ -144,7 +146,6 @@ EventRegistry:RegisterFrameEventAndCallback("PLAYER_LOGIN", function()
     --    ScanUnit('target')
     --end)
     --EventRegistry:RegisterFrameEventAndCallback("UNIT_TARGET", onUnitEvent)
-    --EventRegistry:RegisterFrameEventAndCallback("UNIT_LEVEL", onUnitEvent)
     --EventRegistry:RegisterFrameEventAndCallback("NAME_PLATE_UNIT_ADDED", onUnitEvent)
 
     GuildRoster()
