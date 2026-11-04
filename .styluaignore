@@ -1,0 +1,4 @@
+Libs/
+coverage/
+.lua/
+.luarocks/

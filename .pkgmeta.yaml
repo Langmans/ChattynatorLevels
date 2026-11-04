@@ -1,7 +1,14 @@
 enable-toc-creation: yes
 
+# Files starting with a dot are left out by the packager already.
 ignore:
   - README.md
+  - annotations
+  - coverage
+  - tests
+  - tasks
+  - chattynatorlevels-dev-1.rockspec
+  - stylua.toml
 
 required-dependencies:
     - chattynator
