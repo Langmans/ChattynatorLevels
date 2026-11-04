@@ -41,7 +41,7 @@ For developers or those interested in the "under the hood" mechanics:
 * **API Integration:** Uses the **Chattynator API** to intercept and rewrite chat strings via a custom modifier function.
 * **Pattern Matching:** Employs a specific Lua `gsub` pattern to identify `|Hplayer` links and inject colored level data before the final bracket.
 * **Performance Optimization:** Features a caching system using a Lua `setmetatable` to store color-wrapped level strings, ensuring minimal CPU impact during heavy chat activity.
-* **Event-Driven:** Listens for `GUILD_ROSTER_UPDATE`, `GROUP_ROSTER_UPDATE`, and `PLAYER_LEVEL_UP` to maintain an accurate internal level database without constant polling.
+* **Event-Driven:** Listens for `GUILD_ROSTER_UPDATE`, `GROUP_ROSTER_UPDATE`, `PLAYER_LEVEL_UP` and `UNIT_LEVEL` to maintain an accurate internal level database without constant polling. When `GUILD_ROSTER_UPDATE` says the roster changed on the server (`canRequestRosterUpdate`), the addon asks for it again, as Blizzard's own UI does, so a guildie's level-up arrives with the next update.
 * **Names:** Levels are kept per "Name-Realm". Chattynator names a player on your own realm without the realm (`Ambiguate(name, "none")`), and chat links may too, so a name without one gets your realm added before the lookup.
 * **Secret values:** On Forever and Retail the client can hide a unit's name and level in combat; those units are skipped (`canaccessvalue`) and picked up on the next roster update.
 

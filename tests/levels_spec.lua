@@ -66,6 +66,19 @@ describe("levels are learned", function()
         assert.equal(1, client.rosterRequests)
     end)
 
+    it("from the guild roster again when the server says it changed, as Blizzard's UI asks", function()
+        local ann = { name = "Ann-Other", level = 10 }
+        local client = NewClient({ guild = { ann } })
+        client:Fire("GUILD_ROSTER_UPDATE", false)
+        assert.equal(1, client.rosterRequests)
+        ann.level = 11
+        client:Fire("GUILD_ROSTER_UPDATE", true)
+        assert.equal(2, client.rosterRequests)
+        client:Fire("GUILD_ROSTER_UPDATE", false)
+        assert.equal(2, client.rosterRequests)
+        assert.equal(guildLine("Ann-Other", "Ann|r:|cff1120ff11"), client:Chat("Ann-Other"))
+    end)
+
     it("from the guild roster on clients with the old global GuildRoster", function()
         local client = NewClient({ noGuildInfo = true })
         assert.equal(1, client.rosterRequests)

@@ -102,7 +102,12 @@ local function onUnitEvent(owner, unit)
     ScanUnit(unit)
 end
 
-local function onGuildRoster()
+---GUILD_ROSTER_UPDATE: true says the roster changed on the server and may be asked for again, as
+---Blizzard's own UI does; the update that answers brings the new levels.
+---@param owner number EventRegistry's owner ID
+---@param canRequestRosterUpdate boolean
+local function onGuildRoster(owner, canRequestRosterUpdate)
+    if canRequestRosterUpdate then GuildRoster() end
     local numGuildMembers = GetNumGuildMembers()
     Debug("Guild roster update, numGuildMembers: %d", numGuildMembers)
     for i = 1, numGuildMembers do
